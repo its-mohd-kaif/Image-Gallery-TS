@@ -6,67 +6,80 @@ import "./Home.css";
 function Home() {
   const dispatch: any = useDispatch();
   const data: any = useSelector((state) => state);
-  const [temp, setTemp] = useState<any | []>([]);
-  let tempData: any;
+  const [display, setDisplay] = useState<any | []>([]);
   useEffect(() => {
     dispatch(fetchImage());
-    // if (data.image.data.photos !== undefined) {
-    //   let arr: any = [];
-    //   for (let i = 0; i < tempData.length; i++) {
-    //     let obj = {
-    //       data: tempData[i],
-    //       like: false,
-    //     };
-    //     arr.push(obj);
-    //   }
-    //   setTemp(arr);
-    // }
+    setDisplay(data.image.data);
   }, []);
-  // if (data.image.data.photos !== undefined) {
-  //   localStorage.setItem("image", JSON.stringify(data.image.data.photos));
-  //   tempData = JSON.parse(localStorage.getItem("image") as string);
-  //   console.log("TEMP", tempData);
-  // }
+  const likeHandler = (e: any) => {
+    for (let i = 0; i < display.length; i++) {
+      if (e === display[i].id && display[i].like === false) {
+        display[i].like = true;
+      } else if (e === display[i].id && display[i].like === true) {
+        display[i].like = false;
+      }
+    }
+    setDisplay([...display]);
+    localStorage.setItem("image", JSON.stringify(data.image.data.photos));
+  };
 
-  // const likeHandler = (e: any) => {
-  //   tempData = JSON.parse(localStorage.getItem("image") as string);
-  //   for (let i = 0; i < temp.length; i++) {
-  //     if (e === temp[i].data.id && temp[i].like === false) {
-  //       temp[i].like = true;
-  //       console.log(temp[i].like, temp[i].data.alt);
-  //     } else if (e === temp[i].data.id && temp[i].like === true) {
-  //       temp[i].like = false;
-  //       console.log(temp[i].like, temp[i].data.alt);
-  //     }
-  //   }
-  //   setTemp([...temp]);
-  // };
-  // if (temp.length > 0) {
-  //   localStorage.setItem("image", JSON.stringify(temp));
-  // }
+  const commentHandler = (e: any) => {
+    for (let i = 0; i < display.length; i++) {
+      if (e === display[i].id) {
+        let tempComment = prompt("Type Comments...");
+        display[i].comment = tempComment;
+        break;
+      }
+    }
+    setDisplay([...display]);
+    localStorage.setItem("image", JSON.stringify(data.image.data.photos));
+  };
   return (
     <div>
       <center>
         <h1>Image Gallery</h1>
-        {/* {temp.map((val: any, index: number) => (
+        {display.map((val: any, index: number) => (
           <div key={index} className="imageDiv">
             <div>
-              <img className="image" src={val.data.src.original} alt="" />
+              <img className="image" src={val.data} alt="" />
             </div>
-            <div>
+            <span>
+              <button onClick={() => likeHandler(val.id)} className="likeBtn">
+                {val.like === true ? (
+                  <span>
+                    <i
+                      className="fas fa-heart"
+                      style={{ fontSize: "48px", color: "red" }}
+                    ></i>
+                  </span>
+                ) : (
+                  <span>
+                    <i
+                      className="far fa-heart"
+                      style={{ fontSize: "48px", color: "red" }}
+                    ></i>
+                  </span>
+                )}
+              </button>
+            </span>
+            <span>
               <button
-                onClick={() => likeHandler(val.data.id)}
+                onClick={() => commentHandler(val.id)}
                 className="likeBtn"
               >
                 <i
-                  className="far fa-heart"
-                  style={{ fontSize: "48px", color: "red" }}
+                  className="fas fa-comment"
+                  style={{ fontSize: "48px", color: "black" }}
                 ></i>
-                {val.like === true ? <span>Like</span> : <span>No Like</span>}
               </button>
-            </div>
+            </span>
+            {val.comment !== "" ? (
+              <div className="commentDiv">{val.comment}</div>
+            ) : (
+              <div></div>
+            )}
           </div>
-        ))} */}
+        ))}
       </center>
     </div>
   );

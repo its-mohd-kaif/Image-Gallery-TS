@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+// Initial State
 const initialState = {
   loading: false,
   data: [],
   error: "",
 };
-
+// Fetch Image
 export const fetchImage = createAsyncThunk("data/fetchImage", async () => {
   const response = await fetch(
     "https://api.pexels.com/v1/curated?page=11&per_page=30",
@@ -21,7 +21,7 @@ export const fetchImage = createAsyncThunk("data/fetchImage", async () => {
   const data = response.json();
   return data;
 });
-
+// Slice
 const reduxSlice = createSlice({
   name: "image",
   initialState,
@@ -31,8 +31,17 @@ const reduxSlice = createSlice({
     });
     builder.addCase(fetchImage.fulfilled, (state, action) => {
       state.loading = false;
-      state.data = action.payload;
-      localStorage.setItem("image", JSON.stringify(state.data.photos));
+      for (let i = 0; i < action.payload.photos.length; i++) {
+        let obj = {
+          id: action.payload.photos[i].id,
+          data: action.payload.photos[i].src.original,
+          like: false,
+          comment: "",
+        };
+        state.data.push(obj);
+      }
+      state.data = [...state.data];
+      localStorage.setItem("image", JSON.stringify(state.data));
       state.error = "";
     });
     builder.addCase(fetchImage.rejected, (state, action) => {

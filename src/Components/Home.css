@@ -12,3 +12,8 @@
   border: none;
   cursor: pointer;
 }
+.commentDiv {
+  border: 1px solid gray;
+  font-size: larger;
+  border-radius: 12px;
+}
