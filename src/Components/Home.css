@@ -1,17 +1,20 @@
 .imageDiv {
   display: inline-block;
 }
+
 .image {
   width: 300px;
   height: 500px;
   margin: 1em;
   border: 3px solid black;
 }
+
 .likeBtn {
   background: transparent;
   border: none;
   cursor: pointer;
 }
+
 .commentDiv {
   border: 1px solid gray;
   font-size: larger;
